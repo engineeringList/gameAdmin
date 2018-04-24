@@ -176,3 +176,9 @@ export default {
   }
 }
 </script>
+<style scoped>
+    .chart {
+        padding:0 20px;
+        box-sizing: border-box;
+    }
+</style>
