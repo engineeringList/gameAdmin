@@ -125,10 +125,10 @@ export default {
           }
         },
         grid: {
-          left: 10,
-          right: 10,
-          bottom: 20,
-          top: 30,
+          left: 50,
+          right: 50,
+          bottom: 50,
+          top: 50,
           containLabel: true
         },
         tooltip: {
@@ -178,7 +178,7 @@ export default {
 </script>
 <style scoped>
     .chart {
-        padding:0 20px;
+        padding:20px;
         box-sizing: border-box;
     }
 </style>
