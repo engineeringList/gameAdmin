@@ -4,6 +4,7 @@
 
 <script>
 import echarts from 'echarts'
+import axios from 'axios'
 require('echarts/theme/macarons') // echarts theme
 // import { debounce } from '@/utils'
 
@@ -66,23 +67,30 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      abscissa: [],
+      values: []
     }
   },
   mounted() {
-    this.initChart()
-    if (this.autoResize) {
-      this.__resizeHanlder = debounce(() => {
-        if (this.chart) {
-          this.chart.resize()
-        }
-      }, 100);
-      window.addEventListener('resize', this.__resizeHanlder)
-    }
-
     // 监听侧边栏的变化
-    const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
-    sidebarElm.addEventListener('transitionend', this.__resizeHanlder)
+    // const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
+    // sidebarElm.addEventListener('transitionend', this.__resizeHanlder)
+
+    // 请求数据
+    axios.get('http://localhost:3000/admin/subscribe').then(d => {
+      this.abscissa = d.data.data.abscissa;
+      this.values = d.data.data.values;
+       this.initChart()
+      if (this.autoResize) {
+        this.__resizeHanlder = debounce(() => {
+          if (this.chart) {
+            this.chart.resize()
+          }
+        }, 100);
+        // window.addEventListener('resize', this.__resizeHanlder)
+      }
+    })
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -107,10 +115,10 @@ export default {
     }
   },
   methods: {
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions() {
       this.chart.setOption({
         xAxis: {
-          data: ['2018-05-01', '2018-05-01', '2018-05-01', '2018-05-01', '2018-05-01', '2018-05-01', '2018-05-01'],
+          data: this.abscissa,
           boundaryGap: false,
           axisTick: {
             show: false
@@ -155,7 +163,7 @@ export default {
               }
             }
           },
-          data: actualData,
+          data: this.values,
           animationDuration: 2800,
           animationEasing: 'quadraticOut'
         }]
