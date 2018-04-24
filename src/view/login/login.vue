@@ -7,7 +7,7 @@
         </div>
 
         <Form :model="user" class="loginStyle"  :label-width="80">
-           <div class="title">cosmo后台登录系统</div>
+           <div class="title">后台登录系统</div>
             <FormItem label="用户名：">
                 <Input  class="inpStyle" v-model="user.name" @on-change="iptChange()"  placeholder="请输入用户名"></Input>
             </FormItem>

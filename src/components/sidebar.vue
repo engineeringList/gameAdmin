@@ -1,6 +1,6 @@
 <template>
    <Menu theme="dark" width="auto" :accordion="true" :v-model="lists">
-        <div class="layout-logo-left">COSMO</div>    
+        <div class="layout-logo-left">game</div>    
         <router-link v-for="(list ,index) in lists" :to=list.pathTo  :key="list.title">
             <MenuItem :name="index">
                 <Icon class="nav_1" :type="list.icon" :size="iconSize"></Icon>
@@ -17,7 +17,7 @@ export default {
             lists : [
                 {
                     icon : "person-stalker",
-                    title : "文章发布",
+                    title : "侧边栏",
                     pathTo :"/article"
                 }
             ]
