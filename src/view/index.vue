@@ -90,5 +90,7 @@ export default {
     .appView {
         background-color: #fff;
         min-height: 500px;
+        padding:0 20px;
+        box-sizing: border-box;
     }
 </style>
