@@ -60,7 +60,7 @@ export default {
   methods: {
     getList () {
       let pageNo = parseInt(this.currentPage) - 1;
-      axios.get(`http://localhost:3000/admin/subscribe/list?pageNo=${pageNo}&pageSize=${this.pageSize}`).then(d => {
+      axios.get(`http://192.168.22.203:3000/admin/subscribe/list?pageNo=${pageNo}&pageSize=${this.pageSize}`).then(d => {
         const data = d.data.data
         const users = data.rows;
         let list = [];
@@ -97,12 +97,13 @@ export default {
     }
 
     .tableTitle {
+        padding: 0 80px;
         font-size: 20px;
         line-height: 46px;
     }
 
     .tableStyle {
-        margin-bottom: 30px;
+        margin: 0 80px 30px;
     }
     .pageInfo {
         text-align: center;
