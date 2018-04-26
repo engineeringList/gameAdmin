@@ -78,7 +78,7 @@ export default {
     // sidebarElm.addEventListener('transitionend', this.__resizeHanlder)
 
     // 请求数据
-    axios.get('http://www.hw.mangofun.cn:3000/admin/subscribe').then(d => {
+    axios.get('http://www.hw.mangofun.cn/admin/subscribe').then(d => {
       this.abscissa = d.data.data.abscissa;
       this.values = d.data.data.values;
        this.initChart()
