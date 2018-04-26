@@ -1,26 +1,23 @@
 <template>
-  <div class="dashboard-editor-container">
-      <line-chart :chart-data="lineChartData"></line-chart>
+  <div>
+    <div class="dashboard-editor-container">
+        <line-chart></line-chart>
+    </div>
+    <p>预约总量: {{this.count}}; IOS: {{this.iosc}}; Android: {{this.androidC}}</p>
+    <Table :columns="columns" :data="data"></Table>
+    <Page class="pageInfo"
+			@on-change="pageShow"
+			:total="total" 
+			:page-size="pageSize" 
+			:current='currentPage' 
+			show-elevator 
+		></Page>
   </div>
 </template>
 
 <script>
 import LineChart from '../components/LineChart'
-
-const lineChartData = {
-  newVisitis: {
-    actualData: [120, 82, 91, 154, 162, 140, 145]
-  },
-  messages: {
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  }
-}
+import axios from "axios";
 
 export default {
   name: 'dashboard-admin',
@@ -29,13 +26,58 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      columns: [
+        {
+            title: 'id',
+            key: 'id'
+        },
+        {
+            title: '手机号',
+            key: 'mobile'
+        },
+        {
+            title: '客户端',
+            key: 'type'
+        },
+        {
+            title: '时间',
+            key: 'time'
+        },
+      ],
+      data: [],
+      count: 0,
+      iosc: 0,
+      androidC: 0,
+      total: 1,
+			currentPage: 1,
+			pageSize: 5
     }
   },
   methods: {
-    handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
-    }
-  }
+    getList () {
+      let pageNo = parseInt(this.currentPage) - 1;
+      axios.get(`http://localhost:3000/admin/subscribe/list?pageNo=${pageNo}&pageSize=${this.pageSize}`).then(d => {
+        const data = d.data.data
+        const users = data.rows;
+        let list = [];
+				for (let user of users) {
+					user.type = user.type == 1 ? 'IOS' : 'Android';
+					user.time = new Date(parseInt(user.time) * 1000).toLocaleString();
+					list.push(user);
+        }
+        this.data = list;
+        this.total = data.count;
+        this.iosc = data.iosc;
+        this.androidC = data.androidC;
+			})
+    },
+    pageShow(d){
+			this.currentPage = d;
+			this.getList();
+		},
+  },
+  mounted(){
+		this.getList();
+	}
 }
 </script>

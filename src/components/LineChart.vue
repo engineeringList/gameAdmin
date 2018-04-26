@@ -144,11 +144,11 @@ export default {
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          data: ['预约量']
         },
         series: [
         {
-          name: 'actual',
+          name: '预约量',
           smooth: true,
           type: 'line',
           itemStyle: {
