@@ -13,7 +13,7 @@ app.enable('view cache');
 
 app.use(express.static('./dist'));
 
-app.get('/admin/hw', function (req, res) {
+app.get('/hw', function (req, res) {
     res.render('index', {});
 });
   
