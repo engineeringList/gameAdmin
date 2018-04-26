@@ -60,7 +60,7 @@ export default {
   methods: {
     getList () {
       let pageNo = parseInt(this.currentPage) - 1;
-      axios.get(`http://192.168.22.203:3000/admin/subscribe/list?pageNo=${pageNo}&pageSize=${this.pageSize}`).then(d => {
+      axios.get(`http://localhost:3000/admin/subscribe/list?pageNo=${pageNo}&pageSize=${this.pageSize}`).then(d => {
         const data = d.data.data
         const users = data.rows;
         let list = [];
