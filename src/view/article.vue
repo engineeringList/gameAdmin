@@ -1,10 +1,15 @@
 <template>
-  <div>
-    <div class="dashboard-editor-container">
+  <div class="content_box">
+    <div class="dashboard-editor-container lineChartTable">
         <line-chart></line-chart>
     </div>
-    <p>预约总量: {{this.count}}; IOS: {{this.iosc}}; Android: {{this.androidC}}</p>
-    <Table :columns="columns" :data="data"></Table>
+    <div class="tableTitle clearfix">
+        <div class="fl">预约总量: <span class="successColor">{{this.count}}</span></div>
+        <div class="fr_2">
+            <i class="right_20">IOS: <span class="darkPrimary">{{this.iosc}}</span></i> <i>Android: <span class="darkPrimary">{{this.androidC}}</span></i>
+        </div>
+    </div>
+    <Table class="tableStyle" :columns="columns" :data="data"></Table>
     <Page class="pageInfo"
 			@on-change="pageShow"
 			:total="total" 
@@ -81,3 +86,61 @@ export default {
 	}
 }
 </script>
+
+<style scoped>
+
+    .content_box {
+        padding: 20px;
+    }
+    .lineChartTable {
+        margin-bottom: 20px;
+    }
+
+    .tableTitle {
+        font-size: 20px;
+        line-height: 46px;
+    }
+
+    .tableStyle {
+        margin-bottom: 30px;
+    }
+    .pageInfo {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .fl {
+        float: left
+    }
+    .fr_2 {
+        float: right;
+        margin-right: 20px;
+    }
+
+    .clearfix::after {
+        content: ".";
+        clear: both;
+        display: block;
+        overflow: hidden;
+        font-size: 0;
+        height: 0;
+    }
+
+    .clearfix {
+        zoom: 1;
+    }
+    .successColor {
+        color: #19be6b;
+    }
+    .darkPrimary {
+        color: #2b85e4;
+    }
+    i {
+        font-style: normal;
+        text-decoration: none;
+    }
+
+    .right_20 {
+        margin-right: 20px;
+    }
+</style>
