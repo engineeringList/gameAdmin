@@ -50,7 +50,6 @@ export default {
         },
       ],
       data: [],
-      count: 0,
       iosc: 0,
       androidC: 0,
       total: 1,
@@ -72,6 +71,7 @@ export default {
         }
         this.data = list;
         this.total = data.count;
+        this.count = data.count;
         this.iosc = data.iosc;
         this.androidC = data.androidC;
 			})
