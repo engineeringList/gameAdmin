@@ -3,7 +3,7 @@
     <div class="dashboard-editor-container">
         <line-chart></line-chart>
     </div>
-    <p>预约总量: {{this.count}}; IOS: {{this.iosc}}; Android: {{this.androidC}}</p>
+    <p>预约总量: {{this.total}}; IOS: {{this.iosc}}; Android: {{this.androidC}}</p>
     <Table :columns="columns" :data="data"></Table>
     <Page class="pageInfo"
 			@on-change="pageShow"
@@ -45,7 +45,6 @@ export default {
         },
       ],
       data: [],
-      count: 0,
       iosc: 0,
       androidC: 0,
       total: 1,
@@ -67,6 +66,7 @@ export default {
         }
         this.data = list;
         this.total = data.count;
+        this.count = data.count;
         this.iosc = data.iosc;
         this.androidC = data.androidC;
 			})
