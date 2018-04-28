@@ -11,6 +11,12 @@ app.engine('html', require('ejs').renderFile);
 // 模板缓存
 app.enable('view cache');
 
+app.use((req, res, next) => {
+    if (req.hostname != 'www.hw.mangofun.cn') {
+        return res.json('非法请求')
+    }
+});
+
 app.use(express.static('./dist'));
 
 app.get('/sub', function (req, res) {
