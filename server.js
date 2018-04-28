@@ -15,6 +15,7 @@ app.use((req, res, next) => {
     if (req.hostname != 'www.hw.mangofun.cn') {
         return res.json('非法请求')
     }
+    return next();
 });
 
 app.use(express.static('./dist'));
