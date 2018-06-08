@@ -17,20 +17,20 @@
 import Sidebar from '../components/sidebar';
 import axios from 'axios';
 import loginShow from '../lib/loginShow';
+axios.defaults.baseURL = 'http://localhost:3000';
 export default {
     data () {
         return {
             isCollapsed:false,
         }
     },
-    // beforeRouteEnter (to, from, next) {
-    //     loginShow().then(d => {
-    //         next();
-    //     }).catch(err => {
-    //         return next("/login");
-    //     });
-        
-    // },
+    beforeRouteEnter (to, from, next) {
+        loginShow().then(d => {
+            next();
+        }).catch(err => {
+            return next("/login");
+        });
+    },
     // beforeRouteUpdate (to, from, next) {
     //     loginShow().then(d => {
     //         next();

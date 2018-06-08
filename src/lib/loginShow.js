@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default () => {
     return new Promise((resolve, reject) => {
-        axios.get('/back/login/verify').then(d => {
+        axios.get('/api/login').then(d => {
             if(d.data.code == 1){
                 return resolve("1");
             }else{
