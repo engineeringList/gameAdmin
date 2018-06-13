@@ -24,13 +24,13 @@ export default {
             isCollapsed:false,
         }
     },
-    beforeRouteEnter (to, from, next) {
-        loginShow().then(d => {
-            next();
-        }).catch(err => {
-            return next("/login");
-        });
-    },
+    // beforeRouteEnter (to, from, next) {
+    //     loginShow().then(d => {
+    //         next();
+    //     }).catch(err => {
+    //         return next("/login");
+    //     });
+    // },
     // beforeRouteUpdate (to, from, next) {
     //     loginShow().then(d => {
     //         next();

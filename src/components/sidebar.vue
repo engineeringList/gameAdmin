@@ -20,8 +20,14 @@ export default {
                     name: "1-1",
                     icon : "person-stalker",
                     title : "首页",
+                    pathTo :"/"
+                },
+                {   
+                    name: "2-1",
+                    icon : "person-stalker",
+                    title : "文章管理",
                     pathTo :"/article"
-                }
+                },
             ],
             isCollapsed :false
         }

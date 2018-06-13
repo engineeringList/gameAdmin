@@ -7,8 +7,15 @@ import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 import loginShow from './lib/loginShow';
 
+import Element from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import vueQuillEditor from 'vue-quill-editor'
+
 Vue.config.productionTip = false
 Vue.use(iView);
+
+Vue.use(Element) // use element-ui library
+Vue.use(vueQuillEditor) // use vue quill editor
 
 /* eslint-disable no-new */
 new Vue({
