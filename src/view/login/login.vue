@@ -34,11 +34,13 @@ export default {
     },
     methods : {
         loginBtnClick () {
-            axios.post(`/back/login`, {
-                "userName" : this.user.name,
-                "password" : this.user.mima
+            axios.post(`/api/login`, {
+                account : this.user.name,
+                password : this.user.mima
             }).then((res) => {
                 if(res.data.code === 1 ) {
+                    localStorage.setItem('jwtToken', res.data.data.token);
+                    localStorage.setItem('expire', res.data.data.expire);
                     window.location.href = "/#/" 
                 }else{
                     this.$Message.info(res.data.msg);

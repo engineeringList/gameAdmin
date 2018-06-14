@@ -7,6 +7,8 @@ import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 import loginShow from './lib/loginShow';
 
+import axios from 'axios'
+
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import vueQuillEditor from 'vue-quill-editor'
@@ -16,6 +18,8 @@ Vue.use(iView);
 
 Vue.use(Element) // use element-ui library
 Vue.use(vueQuillEditor) // use vue quill editor
+
+axios.defaults.baseURL = 'http://127.0.0.1:3000';
 
 /* eslint-disable no-new */
 new Vue({

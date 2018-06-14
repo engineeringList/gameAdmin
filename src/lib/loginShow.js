@@ -2,15 +2,11 @@ import axios from 'axios';
 
 export default () => {
     return new Promise((resolve, reject) => {
-        axios.get('/api/login').then(d => {
-            if(d.data.code == 1){
-                return resolve("1");
-            }else{
-                return reject("-1");
-            }
-        }).catch(error => {
-            console.error('权限错误');
+        const now = new Date().getTime();
+        if (localStorage.expire && now < localStorage.expire) {
+            return resolve("1");
+        } else {
             return reject("-1");
-        })
+        }
     });
 };

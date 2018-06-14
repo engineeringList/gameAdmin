@@ -1,23 +1,52 @@
 <template>
-  <div class="hello">
-    <h1>{{msg}}</h1>
+    <Form ref="formValidate" :model="formValidate" :label-width="120" class="fromStyle">
+      	<FormItem label="标题：" prop="title">
+          	<Input v-model="formValidate.title" placeholder="请填写标题" class="optionStyle"></Input>
+      	</FormItem>
+      	<FormItem label="作者：" prop="author">
+          	<Input v-model="formValidate.author" placeholder="请填写作者" class="optionStyle"></Input>
+      	</FormItem>
+	  	<FormItem label="文章类型：" prop="type">
+			<Select v-model="formValidate.type" placeholder="请选择文章类型" clearable class="optionStyle">
+				<Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+			</Select>
+		</FormItem>
+		<quill-editor
+			style="height: 400px"
+			v-model="content"
+			ref="myQuillEditor"
+			class="editor"
+			:options="myQuillEditor"
+			@focus="onEditorFocus">
+		</quill-editor>
+
+		<!-- image upload dialog -->
+		<el-upload 
+			class="upload-demo" 
+			action="http://up-z0.qiniu.com" 
+			:before-upload='beforeUpload' 
+			:data="uploadData" 
+			:on-success='upScuccess'
+			ref="upload" 
+			style="display:none"
+		>
+			<el-button 
+				size="small" 
+				type="primary" 
+				id="imgInput" 
+				v-loading.fullscreen.lock="fullscreenLoading" 
+				element-loading-text="插入中,请稍候"
+			>
+				点击上传
+			</el-button>
+		</el-upload>
+      	<FormItem>
+          	<Button type="primary" @click="handleSubmit('formValidate')">确定</Button>
+      	</FormItem>
+  </Form>
 
     <!-- use vue quill editor -->
-    <quill-editor
-      style="height: 400px"
-      v-model="content"
-      ref="myQuillEditor"
-      class="editor"
-      :options="myQuillEditor"
-      @focus="onEditorFocus">
-    </quill-editor>
-
-    <!-- image upload dialog -->
-    <el-upload class="upload-demo" action="http://up-z0.qiniu.com" :before-upload='beforeUpload' :data="uploadData" :on-success='upScuccess'
-      ref="upload" style="display:none">
-      <el-button size="small" type="primary" id="imgInput" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="插入中,请稍候">点击上传</el-button>
-    </el-upload>
-  </div>
+    
 </template>
 
 <script>
@@ -31,41 +60,59 @@ export default {
   name: 'beginning',
   data () {
     return {
-      msg: 'Vue-quill-editor Demo', // message
-      uploadData: {},
-        fullscreenLoading: false,
-      myQuillEditor: {
-        modules: {
-          toolbar: {
-            container: [
-              ['bold', 'italic', 'underline', 'strike'],
-              ['blockquote', 'code-block'],
-              [{ 'header': 1 }, { 'header': 2 }],
-              [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-              [{ 'script': 'sub' }, { 'script': 'super' }],
-              [{ 'indent': '-1' }, { 'indent': '+1' }],
-              [{ 'direction': 'rtl' }],
-              [{ 'size': ['small', false, 'large', 'huge'] }],
-              [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-              [{ 'color': [] }, { 'background': [] }],
-              [{ 'align': [] }],
-              ['clean'],
-              ['image']
-            ],
-            handlers: {
-              'image': this.showUploadDialog
-            }
-          }
-        },
-        placeholder: 'insert your text here'
-      }, // quill editor config setting
-      content: '', // quill-editor data model
-      dialogUploadImage: false, // show upload dialog or not
-      uploadURL: '', // upload url eg: http://xxx-test.xxxxxx.com/api/jboard/announcements/upload
-      headers: {
-        Authorization: ''
-      }, // request header
-      fileList: [] // filelist
+      	formValidate: {
+			title: '',
+			author: '',
+			type: '',
+		},
+		typeList :[
+			{
+				value: 1,
+				label: '新闻'
+			},
+			{
+				value: 2,
+				label: '公告'
+			},
+			{
+				value: 3,
+				label: '活动'
+			},
+		],
+      	uploadData: {},
+      	fullscreenLoading: false,
+      	myQuillEditor: {
+        	modules: {
+          		toolbar: {
+					container: [
+						['bold', 'italic', 'underline', 'strike'],
+						['blockquote', 'code-block'],
+						[{ 'header': 1 }, { 'header': 2 }],
+						[{ 'list': 'ordered' }, { 'list': 'bullet' }],
+						[{ 'script': 'sub' }, { 'script': 'super' }],
+						[{ 'indent': '-1' }, { 'indent': '+1' }],
+						[{ 'direction': 'rtl' }],
+						[{ 'size': ['small', false, 'large', 'huge'] }],
+						[{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+						[{ 'color': [] }, { 'background': [] }],
+						[{ 'align': [] }],
+						['clean'],
+						['image']
+					],
+					handlers: {
+						'image': this.showUploadDialog
+					}
+				}
+        	},
+       		placeholder: '在这里插入文字'
+      	}, // quill editor config setting
+      	content: '', // quill-editor data model
+      	dialogUploadImage: false, // show upload dialog or not
+      	uploadURL: '', // upload url eg: http://xxx-test.xxxxxx.com/api/jboard/announcements/upload
+      	headers: {
+    		Authorization: ''
+      	}, // request header
+      	fileList: [] // filelist
     }
   },
   components: {
@@ -76,7 +123,33 @@ export default {
     // 为图片ICON绑定事件  getModule 为编辑器的内部属性
     this.$refs.myQuillEditor.quill.getModule('toolbar').addHandler('image', this.imgHandler)
   },
-  methods: {
+  	methods: {
+	  	handleSubmit (name) {
+			console.log(this.formValidate);
+			console.log(this.content)
+			const data = this.formValidate;
+			data.content = this.content
+			axios.post('/api/news', data ).then((d)=>{
+				console.log(d)
+			});
+            // this.submitFlag = true;
+            // this.$refs[name].validate((valid) => {
+            //     if (!valid) {
+            //         this.submitFlag = false;
+            //         return ;
+            //     }
+            //     if (isNaN(this.formValidate.bizId)){
+            //         this.submitFlag = false;
+            //         return this.$Message.error('商户ID不正确');
+            //     }
+            //     if (/\d/.test(this.formValidate.region)){
+            //         this.submitFlag = false;
+            //         return this.$Message.error('内容不应含有数字');
+            //     }
+                
+               
+            // })
+        },
     /**
      *
      * listen editor on focus
@@ -222,6 +295,20 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    .crumbs{
+        height: 40px;
+        line-height: 40px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+
+    .fromStyle {
+        padding: 20px;
+    }
+
+    .optionStyle {
+        width: 240px;
+    }
+    
 </style>
