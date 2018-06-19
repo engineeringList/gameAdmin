@@ -28,6 +28,12 @@ export default {
                     title : "文章管理",
                     pathTo :"/article"
                 },
+                {   
+                    name: "3-1",
+                    icon : "person-stalker",
+                    title : "文章列表",
+                    pathTo :"/articlelist"
+                }
             ],
             isCollapsed :false
         }

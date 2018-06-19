@@ -3,6 +3,7 @@ import Router from "vue-router";
 import Index from "@/view/index";
 import Login from "@/view/login/login";
 import Article from "@/view/article";
+import Articlelist from "@/view/Articlelist";
 import Home from "@/view/home";
 
 Vue.use(Router);
@@ -28,10 +29,22 @@ export default new Router({
             component: Index,
             redirect: 'article',
             children: [
-                {
+                 {
                     path: "/article",
                     name: "文章管理",
                     component: Article
+                }
+            ]
+        }, {
+            path: "/",
+            name: "文章列表",
+            component: Index,
+            redirect: 'articlelist',
+            children: [
+                {
+                    path: "/articlelist",
+                    name: "文章列表",
+                    component: Articlelist
                 }
             ]
         },

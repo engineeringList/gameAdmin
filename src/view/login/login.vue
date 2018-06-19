@@ -34,7 +34,7 @@ export default {
     },
     methods : {
         loginBtnClick () {
-            axios.post(`/api/login`, {
+            axios.post(`http://wwlin.cn/api/login`, {
                 account : this.user.name,
                 password : this.user.mima
             }).then((res) => {
