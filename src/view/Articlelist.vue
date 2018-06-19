@@ -1,5 +1,9 @@
 <template>
     <div class="content_box">
+        <Breadcrumb class="brands">
+            <BreadcrumbItem to="/">首页</BreadcrumbItem>
+            <BreadcrumbItem to="/#/articlelist">文章列表</BreadcrumbItem>
+        </Breadcrumb>
         <Table class="tableStyle" :columns="columns" :data="data"></Table>
         <Page class="pageInfo"
 			@on-change="pageShow"
@@ -117,5 +121,11 @@ export default {
         text-align: center;
         margin-bottom: 20px;
     }
-    
+    .brands {
+        height: 40px;
+        line-height: 40px;
+        font-size: 16px;
+        /* padding-left: 20px; */
+        margin-bottom: 20px;
+    }
 </style>

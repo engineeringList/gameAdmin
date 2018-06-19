@@ -4,6 +4,7 @@
         
         <Header :style="{padding: 0}" class="layout-header-bar">
             <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '20px 20px 0'}" type="navicon-round" size="24"></Icon>
+            <Button class="outlogin" type="primary" @click="outlogin">退出登陆</Button>
         </Header>
         <Layout class="content">
             <Content class="appView">
@@ -41,6 +42,11 @@ export default {
     methods: {
         collapsedSider () {
             this.isCollapsed = !this.isCollapsed  
+        },
+        outlogin() {
+            console.log(1111);
+            localStorage.clear();
+            window.location.href ="/#/login";
         }
     },
     components :{
@@ -62,7 +68,7 @@ export default {
 <style scoped>
     .layout{
         border: 1px solid #d7dde4;
-        background: #f5f7f9;
+        background: #ffffff;
         position: relative;
         border-radius: 4px;
         overflow: hidden;
@@ -73,6 +79,7 @@ export default {
         display: flex;
         background: #fff;
         box-shadow: 0 1px 1px rgba(0,0,0,.1);
+        border-bottom: 1px solid #ccc;
     }
 
     .menu-icon{
@@ -86,10 +93,20 @@ export default {
     .content {
         display: flex;
         padding: 20px;
+        background-color: #ffffff;
     }
     .appView {
         background-color: #fff;
         min-height: 500px;
         
+    }
+
+    .outlogin {
+        height: 40px;
+        /* float: right; */
+        /* margin-top: 12px; */
+        position: absolute;
+        top: 13px;
+        right: 20px;
     }
 </style>

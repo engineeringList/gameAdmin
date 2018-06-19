@@ -1,49 +1,58 @@
 <template>
-    <Form ref="formValidate" :model="formValidate" :label-width="120" class="fromStyle">
-      	<FormItem label="标题：" prop="title">
-          	<Input v-model="formValidate.title" placeholder="请填写标题" class="optionStyle"></Input>
-      	</FormItem>
-      	<FormItem label="作者：" prop="author">
-          	<Input v-model="formValidate.author" placeholder="请填写作者" class="optionStyle"></Input>
-      	</FormItem>
-	  	<FormItem label="文章类型：" prop="type">
-			<Select v-model="formValidate.type" placeholder="请选择文章类型" clearable class="optionStyle">
-				<Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-			</Select>
-		</FormItem>
-		<quill-editor
-			style="height: 400px"
-			v-model="content"
-			ref="myQuillEditor"
-			class="editor"
-			:options="myQuillEditor"
-			@focus="onEditorFocus">
-		</quill-editor>
+    <div>
+        <Breadcrumb class="brands">
+            <BreadcrumbItem to="/">首页</BreadcrumbItem>
+            <BreadcrumbItem to="/#/article">文章管理</BreadcrumbItem>
+        </Breadcrumb>
+        <Form ref="formValidate" :model="formValidate" :label-width="120" class="fromStyle">
+            <FormItem label="标题：" prop="title">
+                <Input v-model="formValidate.title" placeholder="请填写标题" class="optionStyle"></Input>
+            </FormItem>
+            <FormItem label="作者：" prop="author">
+                <Input v-model="formValidate.author" placeholder="请填写作者" class="optionStyle"></Input>
+            </FormItem>
+            <FormItem label="文章类型：" prop="type">
+                <Select v-model="formValidate.type" placeholder="请选择文章类型" clearable class="optionStyle">
+                    <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
+            </FormItem>
+            <FormItem label="文章内容：">
+                <quill-editor
+                    style="height: 400px"
+                    v-model="content"
+                    ref="myQuillEditor"
+                    class="editor"
+                    :options="myQuillEditor"
+                    @focus="onEditorFocus">
+                </quill-editor>
+            </FormItem>
+            
 
-		<!-- image upload dialog -->
-		<el-upload 
-			class="upload-demo" 
-			action="http://up-z0.qiniu.com" 
-			:before-upload='beforeUpload' 
-			:data="uploadData" 
-			:on-success='upScuccess'
-			ref="upload" 
-			style="display:none"
-		>
-			<el-button 
-				size="small" 
-				type="primary" 
-				id="imgInput" 
-				v-loading.fullscreen.lock="fullscreenLoading" 
-				element-loading-text="插入中,请稍候"
-			>
-				点击上传
-			</el-button>
-		</el-upload>
-      	<FormItem>
-          	<Button type="primary" @click="handleSubmit('formValidate')">确定</Button>
-      	</FormItem>
-  </Form>
+            <!-- image upload dialog -->
+            <el-upload 
+                class="upload-demo" 
+                action="http://up-z0.qiniu.com" 
+                :before-upload='beforeUpload' 
+                :data="uploadData" 
+                :on-success='upScuccess'
+                ref="upload" 
+                style="display:none"
+            >
+                <el-button 
+                    size="small" 
+                    type="primary" 
+                    id="imgInput" 
+                    v-loading.fullscreen.lock="fullscreenLoading" 
+                    element-loading-text="插入中,请稍候"
+                >
+                    点击上传
+                </el-button>
+            </el-upload>
+            <FormItem>
+                <Button type="primary" @click="handleSubmit('formValidate')">确定</Button>
+            </FormItem>
+    </Form>
+    </div>
 
     <!-- use vue quill editor -->
     
@@ -112,7 +121,8 @@ export default {
       	headers: {
     		Authorization: ''
       	}, // request header
-      	fileList: [] // filelist
+          fileList: [], // filelist
+          _id : 0
     }
   },
   components: {
@@ -122,17 +132,65 @@ export default {
   mounted() {
     // 为图片ICON绑定事件  getModule 为编辑器的内部属性
     this.$refs.myQuillEditor.quill.getModule('toolbar').addHandler('image', this.imgHandler);
-    
+    var _url =  window.location.href;
+
+    if (_url.indexOf('id=') != -1) {
+        this._id = parseInt(_url.split("id=")[1]);
+        console.log(this._id);
+    }
+
+    axios.get('http://wwlin.cn/news/' +this._id + '?test=hw').then((d)=>{
+        console.log(d)
+        this.content = d.data.content;
+        this.formValidate.title = d.data.title;
+        this.formValidate.author = d.data.author;
+        this.formValidate.type = d.data.type;
+    })
+
   },
   	methods: {
 	  	handleSubmit (name) {
-			console.log(this.formValidate);
-			console.log(this.content)
 			const data = this.formValidate;
-			data.content = this.content
-			axios.post('http://wwlin.cn/api/news', data ).then((d)=>{
-				console.log(d)
-			});
+            data.content = this.content
+            
+            if(this._id){
+                axios.put('http://wwlin.cn/api/news/' + this._id,data).then((d)=>{
+                    console.log(d);
+                    if(d.data.code == 1) {
+                        this.$Message.info({
+                            content: '修改成功',
+                            duration: 5
+                        });
+                        setTimeout(() => {
+                            window.location.href="/#/articlelist"
+                        }, 3000);
+                    }else {
+                        this.$Message.error({
+                            content: d.data.msg,
+                            duration: 5
+                        });
+                    }
+                })
+            }else {
+                axios.post('http://wwlin.cn/api/news', data ).then((d)=>{
+                    if (d.data.code == 1 ){
+                        this.$Message.info({
+                            content: '添加成功',
+                            duration: 5
+                        });
+                        setTimeout(() => {
+                            window.location.href="/#/articlelist"
+                        }, 3000);
+                    }else {
+                        this.$Message.error({
+                            content: d.data.msg,
+                            duration: 5
+                        });
+                    }
+                });
+            }
+
+			
             // this.submitFlag = true;
             // this.$refs[name].validate((valid) => {
             //     if (!valid) {
@@ -159,7 +217,6 @@ export default {
          *
          */
         onEditorFocus (val) {
-        console.log(val)
         let range = val.getSelection()
         if (range) {
             if (range.length === 0) {
@@ -310,6 +367,14 @@ export default {
 
     .optionStyle {
         width: 240px;
+    }
+
+    .brands {
+        height: 40px;
+        line-height: 40px;
+        font-size: 16px;
+        /* padding-left: 20px; */
+        margin-bottom: 20px;
     }
     
 </style>
