@@ -2,7 +2,7 @@
     <div>
         <Breadcrumb class="brands">
             <BreadcrumbItem to="/">首页</BreadcrumbItem>
-            <BreadcrumbItem to="/#/article">文章管理</BreadcrumbItem>
+            <BreadcrumbItem to="/article">新增文章</BreadcrumbItem>
         </Breadcrumb>
         <Form ref="formValidate" :model="formValidate" :label-width="120" class="fromStyle">
             <FormItem label="标题：" prop="title">

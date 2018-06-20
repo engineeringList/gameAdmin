@@ -2,7 +2,8 @@
     <div class="content_box">
         <Breadcrumb class="brands">
             <BreadcrumbItem to="/">首页</BreadcrumbItem>
-            <BreadcrumbItem to="/#/articlelist">文章列表</BreadcrumbItem>
+            <BreadcrumbItem to="/articlelist">文章列表</BreadcrumbItem>
+            <Button class="searchBtn" type="primary"  @click="addActivity"><Icon type="plus-round"></Icon> 添 加</Button>
         </Breadcrumb>
         <Table class="tableStyle" :columns="columns" :data="data"></Table>
         <Page class="pageInfo"
@@ -27,7 +28,7 @@ export default {
                     key: 'id'
                 },
                 {
-                    title: 'title',
+                    title: '标题',
                     key: 'title'
                 },
                 {
@@ -35,7 +36,6 @@ export default {
                     key: 'type',
                     render:  (h, params) =>{
                         return h('span',{
-
                         },params.row.type == 1 ? '新闻' :(params.row.type == 2 ? '公告': '活动' ) ) 
                     }
                 },
@@ -59,6 +59,12 @@ export default {
                                 props: {
                                     type: 'text',
                                     size: 'small'
+                                },
+                                style: {
+                                    backgroundColor: "#2d8cf0",
+                                    textAlign:"center",
+                                    color:"#eee",
+                                    marginRight: "20px"
                                 },
                                 on : {
                                     click : ()=> {
@@ -100,7 +106,13 @@ export default {
             var Y = date.getFullYear() + '-';
             var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
             var D = date.getDate() + ' ';
-            return Y+M+D;
+            var H = date.getHours() < 10 ? "0" + date.getHours() : date.getHours() + ':';
+            var Mi = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes() + ':';
+            var S = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+            return Y+M+D+H+Mi+S;
+        },
+        addActivity() {
+            window.location.href = '#/article';
         }
     }
 }
@@ -113,7 +125,6 @@ export default {
         margin-bottom: 10px;
         border-radius: 5px;
     }
-
     .tableStyle {
         margin-bottom: 20px;
     }
@@ -127,5 +138,10 @@ export default {
         font-size: 16px;
         /* padding-left: 20px; */
         margin-bottom: 20px;
+    }
+    .searchBtn{
+        float: right;
+        margin-right: 10px;
+        margin-top: 7px;
     }
 </style>

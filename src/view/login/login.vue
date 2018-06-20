@@ -2,7 +2,7 @@
     <div class="loginInfo">
         <Form :model="user" class="loginForm"  :label-width="80">
             <div class="title-container">
-                <h3 class="title">后台登录系统</h3>
+                <h3 class="title">火王后台系统</h3>
             </div>
             <FormItem class="admin">
                 <Icon class="nav_1" type="person"></Icon>

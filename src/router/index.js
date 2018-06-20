@@ -25,17 +25,18 @@ export default new Router({
         },
         {
             path: "/",
-            name: "文章管理",
+            name: "新增文章",
             component: Index,
             redirect: 'article',
             children: [
                  {
                     path: "/article",
-                    name: "文章管理",
+                    name: "新增文章",
                     component: Article
                 }
             ]
-        }, {
+        }, 
+        {
             path: "/",
             name: "文章列表",
             component: Index,
