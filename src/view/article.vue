@@ -9,7 +9,7 @@
                 <Input v-model="formValidate.title" placeholder="请填写标题" class="optionStyle"></Input>
             </FormItem>
             <FormItem  label="显示状态：">
-                <i-Switch v-model="formValidate.status" @on-change="statusChange"></i-Switch>
+                <i-Switch v-model="swathStatus" @on-change="statusChange"></i-Switch>
             </FormItem>
             <FormItem label="作者：" prop="author">
                 <Input v-model="formValidate.author" placeholder="请填写作者" class="optionStyle"></Input>
@@ -69,94 +69,95 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import axios from 'axios'
 export default {
-  name: 'beginning',
-  data () {
-    return {
-      	formValidate: {
-			title: '',
-			author: '',
-            type: '',
-            status: false
-		},
-		typeList :[
-			{
-				value: 1,
-				label: '新闻'
-			},
-			{
-				value: 2,
-				label: '公告'
-			},
-			{
-				value: 3,
-				label: '活动'
-			},
-		],
-      	uploadData: {},
-      	fullscreenLoading: false,
-      	myQuillEditor: {
-        	modules: {
-          		toolbar: {
-					container: [
-						['bold', 'italic', 'underline', 'strike'],
-						['blockquote', 'code-block'],
-						[{ 'header': 1 }, { 'header': 2 }],
-						[{ 'list': 'ordered' }, { 'list': 'bullet' }],
-						[{ 'script': 'sub' }, { 'script': 'super' }],
-						[{ 'indent': '-1' }, { 'indent': '+1' }],
-						[{ 'direction': 'rtl' }],
-						[{ 'size': ['small', false, 'large', 'huge'] }],
-						[{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-						[{ 'color': [] }, { 'background': [] }],
-						[{ 'align': [] }],
-						['clean'],
-						['image']
-					],
-					handlers: {
-						'image': this.showUploadDialog
-					}
-				}
-        	},
-       		placeholder: '在这里插入文字'
-      	}, // quill editor config setting
-      	content: '', // quill-editor data model
-      	dialogUploadImage: false, // show upload dialog or not
-      	uploadURL: '', // upload url eg: http://xxx-test.xxxxxx.com/api/jboard/announcements/upload
-      	headers: {
-    		Authorization: ''
-      	}, // request header
-          fileList: [], // filelist
-          _id : 0
-    }
-  },
-  components: {
-    'quill-editor': quillEditor
-  },
-   // 页面加载后执行 为编辑器的图片图标和视频图标绑定点击事件
-  mounted() {
-    // 为图片ICON绑定事件  getModule 为编辑器的内部属性
-    this.$refs.myQuillEditor.quill.getModule('toolbar').addHandler('image', this.imgHandler);
-    var _url =  window.location.href;
+    name: 'beginning',
+    data () {
+        return {
+            formValidate: {
+                title: '',
+                author: '',
+                type: '',
+                status: 2
+            },
+            swathStatus: false,
+            typeList :[
+                {
+                    value: 1,
+                    label: '新闻'
+                },
+                {
+                    value: 2,
+                    label: '公告'
+                },
+                {
+                    value: 3,
+                    label: '活动'
+                },
+            ],
+            uploadData: {},
+            fullscreenLoading: false,
+            myQuillEditor: {
+                modules: {
+                    toolbar: {
+                        container: [
+                            ['bold', 'italic', 'underline', 'strike'],
+                            ['blockquote', 'code-block'],
+                            [{ 'header': 1 }, { 'header': 2 }],
+                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                            [{ 'script': 'sub' }, { 'script': 'super' }],
+                            [{ 'indent': '-1' }, { 'indent': '+1' }],
+                            [{ 'direction': 'rtl' }],
+                            [{ 'size': ['small', false, 'large', 'huge'] }],
+                            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                            [{ 'color': [] }, { 'background': [] }],
+                            [{ 'align': [] }],
+                            ['clean'],
+                            ['image']
+                        ],
+                        handlers: {
+                            'image': this.showUploadDialog
+                        }
+                    }
+                },
+                placeholder: '在这里插入文字'
+            }, // quill editor config setting
+            content: '', // quill-editor data model
+            dialogUploadImage: false, // show upload dialog or not
+            uploadURL: '', // upload url eg: http://xxx-test.xxxxxx.com/api/jboard/announcements/upload
+            headers: {
+                Authorization: ''
+            }, // request header
+            fileList: [], // filelist
+            _id : 0
+        }
+    },
+    components: {
+        'quill-editor': quillEditor
+    },
+    // 页面加载后执行 为编辑器的图片图标和视频图标绑定点击事件
+    mounted() {
+        // 为图片ICON绑定事件  getModule 为编辑器的内部属性
+        this.$refs.myQuillEditor.quill.getModule('toolbar').addHandler('image', this.imgHandler);
+        var _url =  window.location.href;
 
-    if (_url.indexOf('id=') != -1) {
-        this._id = parseInt(_url.split("id=")[1]);
-    }
+        if (_url.indexOf('id=') != -1) {
+            this._id = parseInt(_url.split("id=")[1]);
+        }
 
-    axios.get('/news/' +this._id + '?test=hw').then((d)=>{
-        this.content = d.data.content;
-        this.formValidate.title = d.data.title;
-        this.formValidate.author = d.data.author;
-        this.formValidate.type = d.data.type;
-        this.status = (d.data.status == 1 ? true : false);
-    })
-
-  },
+        axios.get('/news/' +this._id + '?test=hw').then((d)=>{
+            this.content = d.data.content;
+            this.formValidate.title = d.data.title;
+            this.formValidate.author = d.data.author;
+            this.formValidate.type = d.data.type;
+            this.swathStatus = (d.data.status == 1 ? true : false);
+        });
+    },
   	methods: {
-        statusChange(status) {
-            this.formValidate.status = status ? 1 : 2;
-        },
+        // statusChange(status) {
+        //     this.formValidate.status = status ? 1 : 2;
+        // },
 	  	handleSubmit (name) {
-			const data = this.formValidate;
+            const data = this.formValidate
+            data.status = this.swathStatus ? 1 : 2
             data.content = this.content
             if(this._id){
                 axios.put('/api/news/' + this._id,data).then((d)=>{
@@ -174,44 +175,25 @@ export default {
                             duration: 1
                         });
                     }
-                })
+                });
             }else {
                 axios.post('/api/news', data ).then((d)=>{
                     if (d.data.code == 1 ){
                         this.$Message.info({
                             content: '添加成功',
-                            duration: 5
+                            duration: 1
                         });
                         setTimeout(() => {
                             window.location.href="/#/articlelist"
-                        }, 3000);
+                        }, 1000);
                     }else {
                         this.$Message.error({
                             content: d.data.msg,
-                            duration: 5
+                            duration: 1
                         });
                     }
                 });
             }
-
-			
-            // this.submitFlag = true;
-            // this.$refs[name].validate((valid) => {
-            //     if (!valid) {
-            //         this.submitFlag = false;
-            //         return ;
-            //     }
-            //     if (isNaN(this.formValidate.bizId)){
-            //         this.submitFlag = false;
-            //         return this.$Message.error('商户ID不正确');
-            //     }
-            //     if (/\d/.test(this.formValidate.region)){
-            //         this.submitFlag = false;
-            //         return this.$Message.error('内容不应含有数字');
-            //     }
-                
-               
-            // })
         },
         /**
          *
@@ -261,7 +243,7 @@ export default {
                         key: `video/${suffix.join('.')}_${new Date().getTime()}.${ext}`,
                         token: res
                     }
-                })
+                });
             }
         },
 
