@@ -64,7 +64,6 @@ export default {
                                     backgroundColor: "#2d8cf0",
                                     textAlign:"center",
                                     color:"#eee",
-                                    marginRight: "20px"
                                 },
                                 on : {
                                     click : ()=> {
@@ -90,9 +89,7 @@ export default {
 	  	getList () {
             let pageNo = parseInt(this.currentPage) - 1;
             axios.get(`/api/news?pageNo=${pageNo}&pageSize=${this.pageSize}`).then(d => {
-                console.log(d)
                 const data = d.data.data.news
-                
                 this.data = data.rows;
                 this.total = data.count;
             })

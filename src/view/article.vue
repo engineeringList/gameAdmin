@@ -167,7 +167,7 @@ export default {
                             duration: 1
                         });
                         setTimeout(() => {
-                            window.location.href="/#/articlelist"
+                             window.location.href="/#/articlelist"
                         }, 1000);
                     }else {
                         this.$Message.error({

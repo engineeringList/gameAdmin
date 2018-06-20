@@ -4,7 +4,7 @@
         <line-chart></line-chart>
     </div>
     <div class="tableTitle clearfix">
-        <div class="fl">预约总量: <span class="successColor">{{this.count}}</span></div>
+        <div class="fl">预约总量: <span class="successColor">{{this.total}}</span></div>
         <div class="fr_2">
             <i class="right_20">IOS: <span class="darkPrimary">{{this.iosc}}</span></i> <i>Android: <span class="darkPrimary">{{this.androidC}}</span></i>
         </div>
@@ -31,50 +31,49 @@ export default {
   },
   data() {
     return {
-      columns: [
-        {
-            title: 'id',
-            key: 'id'
-        },
-        {
-            title: '手机号',
-            key: 'mobile'
-        },
-        {
-            title: '客户端',
-            key: 'type'
-        },
-        {
-            title: '时间',
-            key: 'time'
-        },
-      ],
-      data: [],
-      iosc: 0,
-      androidC: 0,
-      total: 1,
-			currentPage: 1,
-			pageSize: 5
+        columns: [
+            {
+                title: 'id',
+                key: 'id'
+            },
+            {
+                title: '手机号',
+                key: 'mobile'
+            },
+            {
+                title: '客户端',
+                key: 'type'
+            },
+            {
+                title: '时间',
+                key: 'time'
+            },
+        ],
+        data: [],
+        iosc: 0,
+        androidC: 0,
+        total: 1,
+		currentPage: 1,
+		pageSize: 5
     }
   },
   methods: {
     getList () {
-      let pageNo = parseInt(this.currentPage) - 1;
-      axios.get(`http://www.hw.mangofun.cn/admin/subscribe/list?pageNo=${pageNo}&pageSize=${this.pageSize}`).then(d => {
-        const data = d.data.data
-        const users = data.rows;
-        let list = [];
-				for (let user of users) {
-					user.type = user.type == 1 ? 'IOS' : 'Android';
-					user.time = new Date(parseInt(user.time) * 1000).toLocaleString();
-					list.push(user);
-        }
-        this.data = list;
-        this.total = data.count;
-        this.count = data.count;
-        this.iosc = data.iosc;
-        this.androidC = data.androidC;
-			})
+        let pageNo = parseInt(this.currentPage) - 1;
+        axios.get(`http://www.hw.mangofun.cn/admin/subscribe/list?pageNo=${pageNo}&pageSize=${this.pageSize}`).then(d => {
+            const data = d.data.data
+            const users = data.rows;
+            let list = [];
+            for (let user of users) {
+                user.type = user.type == 1 ? 'IOS' : 'Android';
+                user.time = new Date(parseInt(user.time) * 1000).toLocaleString();
+                list.push(user);
+            }
+            this.data = list;
+            this.total = data.count;
+            this.iosc = data.iosc;
+            this.androidC = data.androidC;
+		})
     },
     pageShow(d){
 			this.currentPage = d;
