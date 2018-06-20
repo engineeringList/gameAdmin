@@ -8,6 +8,9 @@
             <FormItem label="标题：" prop="title">
                 <Input v-model="formValidate.title" placeholder="请填写标题" class="optionStyle"></Input>
             </FormItem>
+            <FormItem  label="显示状态：">
+                <i-Switch v-model="formValidate.status" @on-change="statusChange"></i-Switch>
+            </FormItem>
             <FormItem label="作者：" prop="author">
                 <Input v-model="formValidate.author" placeholder="请填写作者" class="optionStyle"></Input>
             </FormItem>
@@ -18,7 +21,7 @@
             </FormItem>
             <FormItem label="文章内容：">
                 <quill-editor
-                    style="height: 400px"
+                    style="height: 400px;white-space:pre"
                     v-model="content"
                     ref="myQuillEditor"
                     class="editor"
@@ -36,7 +39,7 @@
                 :data="uploadData" 
                 :on-success='upScuccess'
                 ref="upload" 
-                style="display:none"
+                style="display:none;"
             >
                 <el-button 
                     size="small" 
@@ -49,7 +52,7 @@
                 </el-button>
             </el-upload>
             <FormItem>
-                <Button type="primary" @click="handleSubmit('formValidate')">确定</Button>
+                <Button class='sure' type="primary" @click="handleSubmit('formValidate')">确定</Button>
             </FormItem>
     </Form>
     </div>
@@ -72,7 +75,8 @@ export default {
       	formValidate: {
 			title: '',
 			author: '',
-			type: '',
+            type: '',
+            status: false
 		},
 		typeList :[
 			{
@@ -136,43 +140,43 @@ export default {
 
     if (_url.indexOf('id=') != -1) {
         this._id = parseInt(_url.split("id=")[1]);
-        console.log(this._id);
     }
 
-    axios.get('http://wwlin.cn/news/' +this._id + '?test=hw').then((d)=>{
-        console.log(d)
+    axios.get('/news/' +this._id + '?test=hw').then((d)=>{
         this.content = d.data.content;
         this.formValidate.title = d.data.title;
         this.formValidate.author = d.data.author;
         this.formValidate.type = d.data.type;
+        this.status = (d.data.status == 1 ? true : false);
     })
 
   },
   	methods: {
+        statusChange(status) {
+            this.formValidate.status = status ? 1 : 2;
+        },
 	  	handleSubmit (name) {
 			const data = this.formValidate;
             data.content = this.content
-            
             if(this._id){
-                axios.put('http://wwlin.cn/api/news/' + this._id,data).then((d)=>{
-                    console.log(d);
+                axios.put('/api/news/' + this._id,data).then((d)=>{
                     if(d.data.code == 1) {
                         this.$Message.info({
                             content: '修改成功',
-                            duration: 5
+                            duration: 1
                         });
                         setTimeout(() => {
                             window.location.href="/#/articlelist"
-                        }, 3000);
+                        }, 1000);
                     }else {
                         this.$Message.error({
                             content: d.data.msg,
-                            duration: 5
+                            duration: 1
                         });
                     }
                 })
             }else {
-                axios.post('http://wwlin.cn/api/news', data ).then((d)=>{
+                axios.post('/api/news', data ).then((d)=>{
                     if (d.data.code == 1 ){
                         this.$Message.info({
                             content: '添加成功',
@@ -217,20 +221,19 @@ export default {
          *
          */
         onEditorFocus (val) {
-        let range = val.getSelection()
-        if (range) {
-            if (range.length === 0) {
-            console.log('User cursor is at index', range.index)
-            this.length = range.index
+            let range = val.getSelection()
+            if (range) {
+                if (range.length === 0) {
+                console.log('User cursor is at index', range.index)
+                this.length = range.index
+                } else {
+                var text = val.getText(range.index, range.length)
+                console.log('User has highlighted: ', text)
+                this.length = range.index
+                }
             } else {
-            var text = val.getText(range.index, range.length)
-            console.log('User has highlighted: ', text)
-            this.length = range.index
+                this.length = val.getText().length
             }
-        } else {
-            this.length = val.getText().length
-        }
-        console.log(this.length)
         },
 
         qnLocation() {
@@ -241,20 +244,17 @@ export default {
         },
 
         qnUpload(file) {
-            console.log(2222)
             this.fullscreenLoading = true
             const suffix = file.name.split('.')
             const ext = suffix.splice(suffix.length - 1, 1)[0]
-            console.log(this.uploadType)
             const imgName = `${suffix.join('.')}_${new Date().getTime()}.${ext}`;
             if (this.uploadType === 'image') {  // 如果是点击插入图片
-                return axios.get(`http://wwlin.cn/api/tool/qiniu?imgName=${imgName}`).then(res => {
-                    console.log(res)
+                return axios.get(`/api/tool/qiniu?imgName=${imgName}`).then(res => {
                     this.uploadData = {
                         key: `${imgName}`,
                         token: res.data.data.token
                     }
-                })
+                });
             } else if (this.uploadType === 'video') {  // 如果是点击插入视频
                 return this.api.getVideoQNToken().then(res => {
                     this.uploadData = {
@@ -266,7 +266,6 @@ export default {
         },
 
         imgHandler(state) {
-            console.log(1111)
             this.addRange = this.$refs.myQuillEditor.quill.getSelection()
             if (state) {
                 let fileInput = document.getElementById('imgInput')
@@ -276,7 +275,6 @@ export default {
         },
 
         upScuccess(e, file, fileList) {
-            console.log(33333)
             this.fullscreenLoading = false
             let vm = this
             let url = ''
@@ -376,5 +374,7 @@ export default {
         /* padding-left: 20px; */
         margin-bottom: 20px;
     }
-    
+    .sure {
+        margin-top: 5rem;
+    }
 </style>
